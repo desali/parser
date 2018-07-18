@@ -1,9 +1,18 @@
 #coding: utf-8
 namespace :vk do
     desc "Parsing!"
-    root_url = "https://m.vk.com/nu_case_club"
+    root_url = "https://m.vk.com/molodost_bz"
     ext_for_posts1 = "?offset="
     ext_for_posts2 = "&own=1"
+
+    task :export => :environment do
+      Rails.application.eager_load!
+
+      file = File.open(File.join(Rails.root, "db", "export", "posts.json"), 'w')
+      file.write Post.all.to_json
+      file.close
+    end
+
 
     task :group_posts => :environment do
       require "nokogiri"
@@ -17,10 +26,12 @@ namespace :vk do
         if post.css(".pi_text")[0] != nil
           @posts_arr.push(post.css(".pi_text")[0].text)
           puts post.css(".pi_text")[0].text
+          Post.create(text: post.css(".pi_text")[0].text)
         else
           if post.css(".pi_text")[1] != nil
             @posts_arr.push(post.css(".pi_text")[1].text)
             puts post.css(".pi_text")[1].text
+            Post.create(text: post.css(".pi_text")[1].text)
           else
 
           end
@@ -49,17 +60,19 @@ namespace :vk do
           if post.css(".pi_text")[0] != nil
             @posts_arr.push(post.css(".pi_text")[0].text)
             puts post.css(".pi_text")[0].text
+            Post.create(text: post.css(".pi_text")[0].text)
           else
             if post.css(".pi_text")[1] != nil
               @posts_arr.push(post.css(".pi_text")[1].text)
               puts post.css(".pi_text")[1].text
+              Post.create(text: post.css(".pi_text")[1].text)
             else
 
             end
           end
         end
 
-        if @cur_index + 10 > @posts_count
+        if @cur_index + 10 > 1000
           break
         else
           @cur_index += 10
