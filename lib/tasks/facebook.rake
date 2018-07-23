@@ -2,16 +2,17 @@
 namespace :facebook do
     desc "Parsing!"
 
-    @i = 5
+    @i = 19
     x = 0
     task :user_posts => :environment do
         require "nokogiri"
         require "open-uri"
         require "json"
 
-        html = Nokogiri::HTML(open("https://www.facebook.com/pg/timatimusic/posts?ref=page_internal?offset=0&own=1"))
+        html = Nokogiri::HTML(open("https://www.facebook.com/pg/Will-Smith-92304305160/posts/?offset=0&own=1"))
         
         html.css(".userContent").each do |city|
+            
             puts city.text
             Facebook.create(text: city.text)
             puts " "
@@ -19,7 +20,7 @@ namespace :facebook do
         end
         
         loop do
-            html = Nokogiri::HTML(open("https://www.facebook.com/pg/timatimusic/posts?ref=page_internal?offset=#{@i}&own=1"))
+            html = Nokogiri::HTML(open("https://www.facebook.com/pg/Will-Smith-92304305160/posts/?offset=#{@i}&own=1"))
                 
             html.css(".userContent").each do |city|
                 puts city.text
@@ -28,11 +29,11 @@ namespace :facebook do
                 x = x + 1
             end
 
-            if @i > 250
+            if @i > 100
                 puts x
                 break
             else
-                @i += 5
+                @i += 7
             end
         end
     end
