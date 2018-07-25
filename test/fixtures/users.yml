@@ -1,0 +1,38 @@
+# == Schema Information
+#
+# Table name: users
+#
+#  id              :integer          not null, primary key
+#  username        :string
+#  fullname        :string
+#  biography       :text
+#  follower_count  :integer
+#  following_count :integer
+#  source_id       :integer
+#  gender          :string
+#  birthdate       :date
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#
+
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  username: MyString
+  fullname: MyString
+  biography: MyText
+  follower_count: 1
+  following_count: 1
+  source_id: 1
+  gender: MyString
+  birthdate: 2018-07-24
+
+two:
+  username: MyString
+  fullname: MyString
+  biography: MyText
+  follower_count: 1
+  following_count: 1
+  source_id: 1
+  gender: MyString
+  birthdate: 2018-07-24

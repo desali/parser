@@ -2,20 +2,31 @@
 #
 # Table name: posts
 #
-#  id         :integer          not null, primary key
-#  text       :text
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  id          :integer          not null, primary key
+#  text        :text
+#  shortcode   :string
+#  created_at  :datetime         not null
+#  user_id     :integer
+#  locaton     :string
+#  location_id :integer
+#  vector      :text
+#  updated_at  :datetime         not null
 #
 
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  source_id: 1
-  title: MyText
-  date: 2018-07-23
+  text: MyText
+  shortcode: MyString
+  created_at: 2018-07-24
+  user_id: 1
+  locaton: MyString
+  location_id: 1
 
 two:
-  source_id: 1
-  title: MyText
-  date: 2018-07-23
+  text: MyText
+  shortcode: MyString
+  created_at: 2018-07-24
+  user_id: 1
+  locaton: MyString
+  location_id: 1

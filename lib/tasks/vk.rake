@@ -1,17 +1,17 @@
 #coding: utf-8
 namespace :vk do
     desc "Parsing!"
-    root_url = "https://m.vk.com/molodost_bz"
+    root_url = "https://m.vk.com/typastana"
     ext_for_posts1 = "?offset="
     ext_for_posts2 = "&own=1"
 
-    task :export => :environment do
-      Rails.application.eager_load!
-
-      file = File.open(File.join(Rails.root, "db", "export", "posts.json"), 'w')
-      file.write Post.all.to_json
-      file.close
-    end
+    # task :export => :environment do
+    #   Rails.application.eager_load!
+    #
+    #   file = File.open(File.join(Rails.root, "db", "export", "posts.json"), 'w')
+    #   file.write Post.all.to_json
+    #   file.close
+    # end
 
 
     task :group_posts => :environment do
@@ -23,15 +23,17 @@ namespace :vk do
       @posts_arr = []
 
       html.css(".wall_item").each do |post|
+        @date = post.css('.wi_date')[0].text
+
         if post.css(".pi_text")[0] != nil
           @posts_arr.push(post.css(".pi_text")[0].text)
-          puts post.css(".pi_text")[0].text
-          Post.create(text: post.css(".pi_text")[0].text)
+          # puts post.css(".pi_text")[0].text
+          Post.create(title: post.css(".pi_text")[0].text, source_id: 1, date: @date)
         else
           if post.css(".pi_text")[1] != nil
             @posts_arr.push(post.css(".pi_text")[1].text)
-            puts post.css(".pi_text")[1].text
-            Post.create(text: post.css(".pi_text")[1].text)
+            # puts post.css(".pi_text")[1].text
+            Post.create(title: post.css(".pi_text")[0].text, source_id: 1, date: @date)
           else
 
           end
@@ -57,15 +59,20 @@ namespace :vk do
         puts html.css(".wall_item").count
 
         html.css(".wall_item").each do |post|
+          @date = post.css('.wi_date')[0].text
+
           if post.css(".pi_text")[0] != nil
             @posts_arr.push(post.css(".pi_text")[0].text)
+            # puts post.css(".pi_text")[0].text
+
             puts post.css(".pi_text")[0].text
-            Post.create(text: post.css(".pi_text")[0].text)
+            puts @date
+            Post.create(title: post.css(".pi_text")[0].text, source_id: 1, date: @date)
           else
             if post.css(".pi_text")[1] != nil
               @posts_arr.push(post.css(".pi_text")[1].text)
-              puts post.css(".pi_text")[1].text
-              Post.create(text: post.css(".pi_text")[1].text)
+              # puts post.css(".pi_text")[1].text
+              Post.create(title: post.css(".pi_text")[0].text, source_id: 1, date: @date)
             else
 
             end

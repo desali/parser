@@ -1,13 +1,29 @@
+# == Schema Information
+#
+# Table name: comments
+#
+#  id             :integer          not null, primary key
+#  text           :text
+#  owner_id       :integer
+#  owner_username :string
+#  post_id        :integer
+#  created_at     :datetime         not null
+#  vector         :text
+#  updated_at     :datetime         not null
+#
+
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  source_id: 1
+  text: MyText
+  owner_id: 1
+  owner_username: MyString
   post_id: 1
-  title: MyText
-  date: 2018-07-23
+  created_at: 2018-07-24
 
 two:
-  source_id: 1
+  text: MyText
+  owner_id: 1
+  owner_username: MyString
   post_id: 1
-  title: MyText
-  date: 2018-07-23
+  created_at: 2018-07-24

@@ -3,8 +3,9 @@
 # Table name: sources
 #
 #  id         :integer          not null, primary key
-#  title      :text
+#  title      :string
 #  link       :string
+#  parse_link :string
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #

@@ -10,16 +10,46 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_07_18_135141) do
+ActiveRecord::Schema.define(version: 2018_07_24_134757) do
 
-  create_table "facebooks", force: :cascade do |t|
+  create_table "comments", force: :cascade do |t|
     t.text "text"
+    t.integer "owner_id"
+    t.string "owner_username"
+    t.integer "post_id"
     t.datetime "created_at", null: false
+    t.text "vector"
     t.datetime "updated_at", null: false
   end
 
   create_table "posts", force: :cascade do |t|
     t.text "text"
+    t.string "shortcode"
+    t.datetime "created_at", null: false
+    t.integer "user_id"
+    t.string "locaton"
+    t.integer "location_id"
+    t.text "vector"
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "sources", force: :cascade do |t|
+    t.string "title"
+    t.string "link"
+    t.string "parse_link"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string "username"
+    t.string "fullname"
+    t.text "biography"
+    t.integer "follower_count"
+    t.integer "following_count"
+    t.integer "source_id"
+    t.string "gender"
+    t.date "birthdate"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
