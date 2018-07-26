@@ -7,6 +7,7 @@ namespace :insta do
     require "nokogiri"
     require "open-uri"
     require 'json'
+    require 'net/http'
 
     @root_url = "https://www.instagram.com"
     @ext_for_query = "/graphql/query"
@@ -25,7 +26,7 @@ namespace :insta do
     @tag = 'абайжолыроманы'
 
     task :parse_full_test => :environment do
-      require 'parallel'
+      # require 'parallel'
       start_time = Time.now
 
       @users_with_shortcode = get_users_with_tag(@tag)
@@ -45,6 +46,7 @@ namespace :insta do
 
           # Send all posts to ml server
           # Then with response of vectors create posts
+          send_data(@posts)
 
           @posts.each do |post|
             if create_post(@user_full_info[:id], post[:id], post[:shortcode], post[:text], post[:date])
@@ -671,5 +673,16 @@ namespace :insta do
         puts "Error occured while creating comment!"
         puts @comment.errors.full_messages
       end
+    end
+
+
+    def send_data(data)
+      @uri = URI('http://127.0.0.1:5000/vectorize')
+      @http = Net::HTTP.new(@uri.host, @uri.port)
+      @request = Net::HTTP::Post.new(@uri.path)
+      @request.body = data.to_json
+
+      @response = @http.request(@request)
+      puts "Response #{@response.body}"
     end
 end
