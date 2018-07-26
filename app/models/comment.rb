@@ -3,21 +3,25 @@
 # Table name: comments
 #
 #  id             :integer          not null, primary key
-#  text           :text
-#  owner_id       :integer
+#  post_id        :bigint
+#  owner_id       :bigint
 #  owner_username :string
-#  post_id        :integer
-#  created_at     :datetime         not null
+#  insta_id       :bigint
+#  text           :text
+#  timestamp      :datetime
 #  vector         :text
+#  created_at     :datetime         not null
 #  updated_at     :datetime         not null
 #
 
 class Comment < ApplicationRecord
-  belongs_to :post
+  belongs_to :post, primary_key: :insta_id
 
-  validates :text, presence: true
+  validates :post_id, presence: true
   validates :owner_id, presence: true
   validates :owner_username, presence: true
-  validates :post_id, presence: true
-  validates :vector, presence: true
+  validates :insta_id, presence: true, uniqueness: true
+  validates :text, presence: true
+  validates :date, presence: true
+  # validates :vector, presence: true
 end

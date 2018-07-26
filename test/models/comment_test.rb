@@ -3,12 +3,14 @@
 # Table name: comments
 #
 #  id             :integer          not null, primary key
-#  text           :text
-#  owner_id       :integer
+#  post_id        :bigint
+#  owner_id       :bigint
 #  owner_username :string
-#  post_id        :integer
-#  created_at     :datetime         not null
+#  insta_id       :bigint
+#  text           :text
+#  timestamp      :datetime
 #  vector         :text
+#  created_at     :datetime         not null
 #  updated_at     :datetime         not null
 #
 

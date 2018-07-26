@@ -3,13 +3,15 @@
 # Table name: posts
 #
 #  id          :integer          not null, primary key
-#  text        :text
+#  user_id     :bigint
+#  insta_id    :bigint
 #  shortcode   :string
-#  created_at  :datetime         not null
-#  user_id     :integer
+#  text        :text
+#  timestamp   :datetime
 #  locaton     :string
 #  location_id :integer
 #  vector      :text
+#  created_at  :datetime         not null
 #  updated_at  :datetime         not null
 #
 

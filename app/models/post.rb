@@ -3,25 +3,27 @@
 # Table name: posts
 #
 #  id          :integer          not null, primary key
-#  text        :text
+#  user_id     :bigint
+#  insta_id    :bigint
 #  shortcode   :string
-#  created_at  :datetime         not null
-#  user_id     :integer
+#  text        :text
+#  timestamp   :datetime
 #  locaton     :string
 #  location_id :integer
 #  vector      :text
+#  created_at  :datetime         not null
 #  updated_at  :datetime         not null
 #
 
 class Post < ApplicationRecord
-  belongs_to :user
+  belongs_to :user, primary_key: :insta_id
 
   has_many :comments
 
-  validates :text, presence: true
-  validates :shortcode, presence: true, uniqueness: true
   validates :user_id, presence: true
-  validates :location, presence: true
-  validates :location_id, presence: true
-  validates :vector, presence: true
+  validates :insta_id, presence: true, uniqueness: true
+  validates :shortcode, presence: true, uniqueness: true
+  validates :text, presence: true
+  validates :date, presence: true
+  # validates :vector, presence: true
 end
