@@ -8,7 +8,7 @@
 #  owner_username :string
 #  insta_id       :bigint
 #  text           :text
-#  timestamp      :datetime
+#  date           :datetime
 #  vector         :text
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
@@ -23,5 +23,5 @@ class Comment < ApplicationRecord
   validates :insta_id, presence: true, uniqueness: true
   validates :text, presence: true
   validates :date, presence: true
-  # validates :vector, presence: true
+  validates :vector, presence: true
 end

@@ -1,5 +1,5 @@
 #coding: utf-8
-namespace :test do
+namespace :tests do
     desc "Testing!"
 
     require 'date'
@@ -17,7 +17,7 @@ namespace :test do
 
     # Variables for test
     @username_test =        'ddagar'
-    @user_id_test =         '1526059995'
+    @user_id_test =         '37029185'
     @post_shortcode_test =  'BVIC06NA3Wv'
     @tag_test =             'tengrinews'
 
@@ -26,14 +26,18 @@ namespace :test do
 
     task :test => :environment do
       @posts = get_user_posts(@username_test)
+      @vectors_str = send_data(@posts)
+      @vectors = @vectors_str.split(',')
 
-      puts @posts
-      
-      send_data(@posts)
+      puts (@vectors)
+      puts (@vectors.class)
+      puts (@vectors.length)
 
-      # File.open("public/test_posts.json","w") do |f|
-      #   f.write(@posts.to_json)
-      # end
+      for index in (0...@posts.length) do
+        if create_post(@user_id_test, @posts[index][:id], @posts[index][:shortcode], @posts[index][:text], @posts[index][:date], @vectors[index])
+          puts "Lol"
+        end
+      end
     end
 
     task :without_thread => :environment do
@@ -70,6 +74,20 @@ namespace :test do
       end_time = Time.now
 
       puts end_time - start_time
+    end
+
+    task :create_source => :environment do
+      create_source()
+    end
+
+    task :create_user => :environment do
+      @user_full_info = get_user_info(@username_test)
+
+      puts @user_full_info
+
+      if create_user(@user_full_info[:id], @user_full_info[:username], @user_full_info[:fullname], @user_full_info[:biography], @user_full_info[:follower_count], @user_full_info[:following_count])
+
+      end
     end
 
     def abc(index)
@@ -167,6 +185,52 @@ namespace :test do
       return @posts_json
     end
 
+    def create_source()
+      @source = Source.new(title: 'Intagram', link: "https://www.instagram.com", parse_link: "https://www.instagram.com")
+      if @source.save
+        puts "Source created!"
+        puts @source
+
+        return true
+      else
+        puts "Error occured while creating source!"
+        puts @source.errors.full_messages
+
+        return false
+      end
+    end
+
+    def create_user(insta_id, username, fullname, biography, follower_count, following_count)
+      @user = User.new(source_id: 1, insta_id: insta_id, username: username, fullname: fullname, biography: biography, follower_count: follower_count, following_count: following_count)
+      if @user.save
+        puts "User created!"
+        puts @user
+
+        return true
+      else
+        puts "Error occured while creating user!"
+        puts @user.errors.full_messages
+
+        return false
+      end
+    end
+
+    def create_post(user_id, insta_id, shortcode, text, date, vector)
+      @post = Post.new(user_id: user_id, insta_id: insta_id, shortcode: shortcode, text: text, date: date, vector: vector)
+      if @post.save
+        puts "Post created!"
+        puts @post
+
+        return true
+      else
+        puts "Error occured while creating post!"
+        puts @post.errors.full_messages
+
+        return false
+      end
+    end
+
+
     def send_data(data)
       @uri = URI('http://127.0.0.1:5000/vectorize')
       @http = Net::HTTP.new(@uri.host, @uri.port)
@@ -174,6 +238,6 @@ namespace :test do
       @request.body = data.to_json
 
       @response = @http.request(@request)
-      puts "Response #{@response.body}"
+      return @response.body
     end
 end

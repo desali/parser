@@ -7,7 +7,7 @@
 #  insta_id    :bigint
 #  shortcode   :string
 #  text        :text
-#  timestamp   :datetime
+#  date        :datetime
 #  locaton     :string
 #  location_id :integer
 #  vector      :text
@@ -25,5 +25,5 @@ class Post < ApplicationRecord
   validates :shortcode, presence: true, uniqueness: true
   validates :text, presence: true
   validates :date, presence: true
-  # validates :vector, presence: true
+  validates :vector, presence: true
 end

@@ -7,7 +7,7 @@
 #  insta_id    :bigint
 #  shortcode   :string
 #  text        :text
-#  timestamp   :datetime
+#  date        :datetime
 #  locaton     :string
 #  location_id :integer
 #  vector      :text

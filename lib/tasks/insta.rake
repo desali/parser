@@ -23,7 +23,7 @@ namespace :insta do
     @tag_test =             'tengrinews'
 
     #VARIABLES FOR FULL PARSING
-    @tag = 'абайжолыроманы'
+    @tag = 'счмчс'
 
     task :parse_full_test => :environment do
       # require 'parallel'
@@ -44,18 +44,24 @@ namespace :insta do
         if create_user(@user_full_info[:id], @user_full_info[:username], @user_full_info[:fullname], @user_full_info[:biography], @user_full_info[:follower_count], @user_full_info[:following_count])
           @posts = get_user_posts(@user_username)
 
+          @vectors_str = send_data(@posts)
+          @post_vectors = @vectors_str.split(',')
+
           # Send all posts to ml server
           # Then with response of vectors create posts
           send_data(@posts)
 
-          @posts.each do |post|
-            if create_post(@user_full_info[:id], post[:id], post[:shortcode], post[:text], post[:date])
-              @comments = get_post_comments(@user_full_info[:username], post[:shortcode])
+          for post_index in (0...@posts.length) do
+            if create_post(@user_full_info[:id], @posts[post_index][:id], @posts[post_index][:shortcode], @posts[post_index][:text], @posts[post_index][:date], @post_vectors[post_index])
+              @comments = get_post_comments(@user_full_info[:username], @posts[post_index][:shortcode])
               # Send all comments to ml server
               # Then with response of vectors create comments
 
-              @comments.each do |comment|
-                create_comment(post[:id], comment[:owner_id], comment[:owner_username], comment[:id], comment[:text], comment[:date])
+              @vectors_str = send_data(@comments)
+              @comment_vectors = @vectors_str.split(',')
+
+              for comment_index in (0...@comments.length) do
+                create_comment(@posts[post_index][:id], @comments[comment_index][:owner_id], @comments[comment_index][:owner_username], @comments[comment_index][:id], @comments[comment_index][:text], @comments[comment_index][:date], @comment_vectors[comment_index])
               end
             end
           end
@@ -649,8 +655,8 @@ namespace :insta do
 
     ### DONT FORGET TO ADD VECTOR TO POST AND COMMENT
 
-    def create_post(user_id, insta_id, shortcode, text, date)
-      @post = Post.new(user_id: user_id, insta_id: insta_id, shortcode: shortcode, text: text, date: date)
+    def create_post(user_id, insta_id, shortcode, text, date, vector)
+      @post = Post.new(user_id: user_id, insta_id: insta_id, shortcode: shortcode, text: text, date: date, vector: vector)
       if @post.save
         puts "Post created!"
         puts @post
@@ -664,8 +670,8 @@ namespace :insta do
       end
     end
 
-    def create_comment(post_id, owner_id, owner_username, insta_id, text, date)
-      @comment = Comment.new(post_id: post_id, owner_id: owner_id, owner_username: owner_username, insta_id: insta_id, text: text, date: date)
+    def create_comment(post_id, owner_id, owner_username, insta_id, text, date, vector)
+      @comment = Comment.new(post_id: post_id, owner_id: owner_id, owner_username: owner_username, insta_id: insta_id, text: text, date: date, vector: vector)
       if @comment.save
         puts "Comment created!"
         puts @comment
@@ -679,10 +685,10 @@ namespace :insta do
     def send_data(data)
       @uri = URI('http://127.0.0.1:5000/vectorize')
       @http = Net::HTTP.new(@uri.host, @uri.port)
-      @request = Net::HTTP::Post.new(@uri.path)
+      @request = Net::HTTP::Post.new(@uri.path, {'Content-Type' => 'application/json'})
       @request.body = data.to_json
 
       @response = @http.request(@request)
-      puts "Response #{@response.body}"
+      return @response.body
     end
 end

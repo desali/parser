@@ -8,7 +8,7 @@
 #  owner_username :string
 #  insta_id       :bigint
 #  text           :text
-#  timestamp      :datetime
+#  date           :datetime
 #  vector         :text
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
