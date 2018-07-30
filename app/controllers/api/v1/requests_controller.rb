@@ -18,18 +18,40 @@ class Api::V1::RequestsController < ApplicationController
     @posts_needed = []
     @posts_to_send = []
 
+    @comments = Comment.all.where(:date => @start_datetime.beginning_of_day..@end_datetime.beginning_of_day)
+    @comments_needed = []
+    @comments_to_send = []
+
     for post in @posts
       if post.text.include? @keyword
-        @posts_needed.append({ date: post[:date], vector: post[:vector] })
+        @posts_needed.append({ date: post[:date], vector: post[:vector], text: post[:text], username: post[:user_username] })
+      end
+    end
+
+    for comment in @comments
+      if comment.text.include? @keyword
+        @comments_needed.append({ date: comment[:date], vector: comment[:vector], text: comment[:text], username: comment[:owner_username] })
       end
     end
 
     @posts_to_send = @posts_needed.group_by{ |p| p[:date].to_date }
+    @posts_to_send.sort_by { |date, posts| date }
 
-    puts @posts_to_send
+    @comments_to_send = @comments_needed.group_by{ |p| p[:date].to_date }
+    @comments_to_send.sort_by { |date, comments| date }
+
+    # puts @posts_to_send
     puts @posts_to_send.length
 
-    render json: @posts_to_send
+    # puts @posts_to_send
+    puts @comments_to_send.length
+
+    data = {
+      'posts': @posts_to_send,
+      'comments': @comments_to_send,
+    }
+
+    render json: data
   end
 
   private

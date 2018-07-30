@@ -23,13 +23,13 @@ namespace :insta do
     @tag_test =             'tengrinews'
 
     #VARIABLES FOR FULL PARSING
-    @tag = 'счмчс'
+    @tag_full = 'астанасити❤️'
 
     task :parse_full_test => :environment do
       # require 'parallel'
       start_time = Time.now
 
-      @users_with_shortcode = get_users_with_tag(@tag)
+      @users_with_shortcode = get_users_with_tag(@tag_full)
 
       # puts @users_with_shortcode
 
@@ -52,7 +52,7 @@ namespace :insta do
           send_data(@posts)
 
           for post_index in (0...@posts.length) do
-            if create_post(@user_full_info[:id], @posts[post_index][:id], @posts[post_index][:shortcode], @posts[post_index][:text], @posts[post_index][:date], @post_vectors[post_index])
+            if create_post(@user_full_info[:id], @posts[post_index][:user_username], @posts[post_index][:id], @posts[post_index][:shortcode], @posts[post_index][:text], @posts[post_index][:date], @post_vectors[post_index])
               @comments = get_post_comments(@user_full_info[:username], @posts[post_index][:shortcode])
               # Send all comments to ml server
               # Then with response of vectors create comments
@@ -248,6 +248,7 @@ namespace :insta do
 
         @posts_json.append({
           'id': @id,
+          'user_username': username,
           'shortcode': @shortcode,
           'text': @text,
           'date': @date,
@@ -536,6 +537,7 @@ namespace :insta do
       @query_hash = "ded47faa9a1aaded10161a2ff32abb6b"
       @cookie = 'csrftoken=rX4tiOGNFc1ZpYswnNZAI4UVOqiG4uRI; shbid=19224; ds_user_id=6133659914; mid=W1cFUgAEAAGWZns_pZuLYPe7jiD5; sessionid=IGSCf9c84d0280cd7fc601736ef4a399c7b0587a225a00d7b3dad90e33bac4695ae1%3As0Bjd7QkLDhxBmgF1L1fblZFg1pI4ADa%3A%7B%22_auth_user_id%22%3A6133659914%2C%22_auth_user_backend%22%3A%22accounts.backends.CaseInsensitiveModelBackend%22%2C%22_auth_user_hash%22%3A%22%22%2C%22_platform%22%3A4%2C%22_token_ver%22%3A2%2C%22_token%22%3A%226133659914%3AcIwPJSmI2D6NJJ7QyIvNHKeBBywTDKyP%3A3e380aeb4436c65903f034746bbc27f95bd19e67cf64f8955a1112c5523aae53%22%2C%22last_refreshed%22%3A1532429650.2432715893%7D; rur=FRC; fbm_124024574287414="base_domain=.instagram.com"; mcd=3; ig_cb=1; shbts=1532450692.7065768; urlgen="{\"time\": 1532449387}:1fi0Ql:w8HnCt8BS-pbuAXBPuyNn_Pkfnk"'
 
+      puts "#{@root_url}#{@ext_for_tags}#{tag}"
       html = Nokogiri::HTML(open(URI.encode("#{@root_url}#{@ext_for_tags}#{tag}")), nil, 'UTF-8')
 
       html.css('script').each do |script|
@@ -655,8 +657,8 @@ namespace :insta do
 
     ### DONT FORGET TO ADD VECTOR TO POST AND COMMENT
 
-    def create_post(user_id, insta_id, shortcode, text, date, vector)
-      @post = Post.new(user_id: user_id, insta_id: insta_id, shortcode: shortcode, text: text, date: date, vector: vector)
+    def create_post(user_id, user_username, insta_id, shortcode, text, date, vector)
+      @post = Post.new(user_id: user_id, user_username: user_username, insta_id: insta_id, shortcode: shortcode, text: text, date: date, vector: vector)
       if @post.save
         puts "Post created!"
         puts @post

@@ -26,6 +26,7 @@ ActiveRecord::Schema.define(version: 2018_07_24_134757) do
 
   create_table "posts", force: :cascade do |t|
     t.bigint "user_id"
+    t.string "user_username"
     t.bigint "insta_id"
     t.string "shortcode"
     t.text "text"

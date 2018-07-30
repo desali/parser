@@ -23,7 +23,7 @@
 class User < ApplicationRecord
   belongs_to :source
 
-  has_many :posts
+  has_many :posts, foreign_key: :user_id, primary_key: :insta_id
   has_many :comments, through: :posts
 
   validates :source_id, presence: true
