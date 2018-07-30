@@ -23,13 +23,13 @@ namespace :insta do
     @tag_test =             'tengrinews'
 
     #VARIABLES FOR FULL PARSING
-    @tag_full = 'астанасити❤️'
+    @tag_full_test = 'астана'
 
     task :parse_full_test => :environment do
       # require 'parallel'
       start_time = Time.now
 
-      @users_with_shortcode = get_users_with_tag(@tag_full)
+      @users_with_shortcode = get_users_with_tag(@tag_full_test)
 
       # puts @users_with_shortcode
 
