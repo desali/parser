@@ -685,7 +685,7 @@ namespace :insta do
 
 
     def send_data(data)
-      @uri = URI('http://127.0.0.1:5000/vectorize')
+      @uri = URI('https://social-ml.herokuapp.com/vectorize')
       @http = Net::HTTP.new(@uri.host, @uri.port)
       @request = Net::HTTP::Post.new(@uri.path, {'Content-Type' => 'application/json'})
       @request.body = data.to_json
