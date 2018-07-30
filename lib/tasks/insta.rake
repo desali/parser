@@ -23,13 +23,13 @@ namespace :insta do
     @tag_test =             'tengrinews'
 
     #VARIABLES FOR FULL PARSING
-    @tag_full_test = 'астана'
+    @tag_full = 'астанасити'
 
     task :parse_full_test => :environment do
       # require 'parallel'
       start_time = Time.now
 
-      @users_with_shortcode = get_users_with_tag(@tag_full_test)
+      @users_with_shortcode = get_users_with_tag(@tag_full)
 
       # puts @users_with_shortcode
 
@@ -52,7 +52,7 @@ namespace :insta do
           send_data(@posts)
 
           for post_index in (0...@posts.length) do
-            if create_post(@user_full_info[:id], @posts[post_index][:user_username], @posts[post_index][:id], @posts[post_index][:shortcode], @posts[post_index][:text], @posts[post_index][:date], @post_vectors[post_index])
+            if create_post(@user_full_info[:id], @user_full_info[:username], @posts[post_index][:id], @posts[post_index][:shortcode], @posts[post_index][:text], @posts[post_index][:date], @post_vectors[post_index])
               @comments = get_post_comments(@user_full_info[:username], @posts[post_index][:shortcode])
               # Send all comments to ml server
               # Then with response of vectors create comments
