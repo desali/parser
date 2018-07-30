@@ -23,7 +23,7 @@ namespace :insta do
     @tag_test =             'tengrinews'
 
     #VARIABLES FOR FULL PARSING
-    @tag_full = 'абайжолыроманы'
+    @tag_full = 'яжматьегомать'
 
     task :parse_full_test => :environment do
       # require 'parallel'
