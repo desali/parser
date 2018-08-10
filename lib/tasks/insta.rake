@@ -23,7 +23,7 @@ namespace :insta do
     @tag_test =             'tengrinews'
 
     #VARIABLES FOR FULL PARSING
-    @tag_full = 'астанаэкспо2017🎉'
+    @tag_full = 'астанаситилаиф'
 
     task :parse_full_test => :environment do
       # require 'parallel'
@@ -49,10 +49,9 @@ namespace :insta do
 
           # Send all posts to ml server
           # Then with response of vectors create posts
-          send_data(@posts)
 
           for post_index in (0...@posts.length) do
-            if create_post(@user_full_info[:id], @user_full_info[:username], @posts[post_index][:id], @posts[post_index][:shortcode], @posts[post_index][:text], @posts[post_index][:date], @post_vectors[post_index])
+            if @post_vectors[post_index].length == 10000 && create_post(@user_full_info[:id], @user_full_info[:username], @posts[post_index][:id], @posts[post_index][:shortcode], @posts[post_index][:text], @posts[post_index][:date], @post_vectors[post_index])
               @comments = get_post_comments(@user_full_info[:username], @posts[post_index][:shortcode])
               # Send all comments to ml server
               # Then with response of vectors create comments
@@ -61,7 +60,9 @@ namespace :insta do
               @comment_vectors = @vectors_str.split(',')
 
               for comment_index in (0...@comments.length) do
-                create_comment(@posts[post_index][:id], @comments[comment_index][:owner_id], @comments[comment_index][:owner_username], @comments[comment_index][:id], @comments[comment_index][:text], @comments[comment_index][:date], @comment_vectors[comment_index])
+                if @comment_vectors[comment_index].length == 10000
+                  create_comment(@posts[post_index][:id], @comments[comment_index][:owner_id], @comments[comment_index][:owner_username], @comments[comment_index][:id], @comments[comment_index][:text], @comments[comment_index][:date], @comment_vectors[comment_index])
+                end
               end
             end
           end

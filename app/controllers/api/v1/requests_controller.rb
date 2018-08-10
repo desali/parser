@@ -23,13 +23,17 @@ class Api::V1::RequestsController < ApplicationController
     @comments_to_send = []
 
     for post in @posts
-      if post.text.include? @keyword
+      @post_arr = post.text.split(" ")
+      @post_set = Set.new(@post_arr.map(&:downcase))
+      if @post_set.include? @keyword.downcase
         @posts_needed.append({ date: post[:date], vector: post[:vector], text: post[:text], username: post[:user_username] })
       end
     end
 
     for comment in @comments
-      if comment.text.include? @keyword
+      @comment_arr = comment.text.split(" ")
+      @comment_set = Set.new(@comment_arr.map(&:downcase))
+      if @comment_set.include? @keyword.downcase
         @comments_needed.append({ date: comment[:date], vector: comment[:vector], text: comment[:text], username: comment[:owner_username] })
       end
     end
